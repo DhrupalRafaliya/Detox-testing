@@ -1,38 +1,26 @@
-const { log } = require('detox');
+const { device, element, by } = require('detox');
 
-describe('Example', () => {
+describe('Navigation Flow Test', () => {
   beforeAll(async () => {
     await device.launchApp({ newInstance: true });
-
-    await device.openURL({
-      url: `exp+detox-testing://expo-development-client/?url=${encodeURIComponent(
-        `http://localhost:8081`
-      )}`,
-    });
   });
 
-  beforeEach(async () => {
-    await device.reloadReactNative();
-  });
-  // get by test id
-  it('should have welcome screen', async () => {
+  it('should navigate from Home to Details screen', async () => {
+    // Check if the initial screen is rendered
     await expect(element(by.id('welcome'))).toBeVisible();
-  });
 
-  // get by text
-  it('should have welcome screen with text Dhrupal', async () => {
-    log.info('My First log');
+    // Tap on the "Go to Details" button to navigate
+    await element(by.id('goto-details')).tap();
+
+    // Wait for the Details screen to appear
+    await expect(element(by.text('Details Screen'))).toBeVisible();
+  });
+  it('should navigate from Details screen to Home screen', async () => {
+    // Wait for the Details screen to appear
+    await expect(element(by.text('Details Screen'))).toBeVisible();
+
+    await element(by.id('goto-home')).tap();
+
     await expect(element(by.text('Welcome Dhrupal Rafaliya'))).toBeVisible();
   });
-
-  it('Tapping button', async () => {
-    await element(by.id('tappable')).tap();
-    await expect(element(by.id('welcome-pratham'))).toBeVisible();
-  });
-
-  // it('It have vissible text Welcome Pratham', async () => {
-  //   await expect(element(by.id('welcome-pratham'))).toBeVisible();
-  // });
-
-
 });
